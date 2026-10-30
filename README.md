@@ -1,0 +1,58 @@
+# Playwright MCP – Abdul Nafay Portfolio Tests
+
+End-to-end tests for the homepage of <https://abdulnafay.vercel.app/>, planned and generated with Playwright's AI agents (planner, generator, healer) over the Playwright MCP server.
+
+## Structure
+
+| Path | Purpose |
+| --- | --- |
+| `specs/abdulnafay-homepage.plan.md` | Test plan: scenarios, steps, expected results and target spec file names |
+| `tests/homepage/*.spec.ts` | One spec per plan item (load, hero, about, skills, projects, blog, navigation, responsive, a11y, ...) |
+| `seed.spec.ts` | Seed test the generator agent starts from |
+| `.claude/agents/` | Planner, generator and healer agent definitions |
+| `.mcp.json` | Playwright MCP server configuration |
+| `playwright.config.ts` | Playwright configuration |
+
+## Setup
+
+```bash
+npm install
+npx playwright install
+```
+
+## Running tests
+
+```bash
+# everything
+npx playwright test tests/homepage
+
+# a single file
+npx playwright test tests/homepage/blog.spec.ts
+
+# fewer parallel workers (the tests hit a live site, so 2 is more stable)
+npx playwright test tests/homepage --workers=2
+
+# list tests without running
+npx playwright test tests/homepage --list
+```
+
+### Reports
+
+```bash
+npx playwright test tests/homepage --reporter=html
+npx playwright show-report
+```
+
+Failure details are written to `test-results/`.
+
+## Workflow
+
+1. **Plan** – the planner agent explores the live site and writes `specs/*.plan.md`.
+2. **Generate** – the generator agent turns each scenario into a spec under `tests/`.
+3. **Heal** – the healer agent runs failing tests and fixes selectors or timing.
+
+## Notes
+
+- Tests run against the live production site, so occasional timeouts can happen under heavy parallelism.
+- The cross-browser test needs Firefox and WebKit (`npx playwright install firefox webkit`).
+- Zoom and slow-network tests are approximations (narrow viewport / CDP throttling).
